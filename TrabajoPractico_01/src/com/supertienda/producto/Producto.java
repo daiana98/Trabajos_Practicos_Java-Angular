@@ -119,7 +119,7 @@ public class Producto implements AplicableDescuento{
 			}
 		}else if(this instanceof ProductoLimpieza) {
 			ProductoLimpieza productoL = (ProductoLimpieza) this;
-			if(!(porcentajeGanancia<=25)) {
+			if(porcentajeGanancia<=25) {
 				if(!(productoL.getTipoAplicacion().equals(TipoAplicacion.MULTIUSO) || productoL.getTipoAplicacion().equals(TipoAplicacion.ROPA))) {
 					if(!(porcentajeGanancia>=10)) {
 						status = false;

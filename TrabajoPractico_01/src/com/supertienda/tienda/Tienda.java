@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -77,7 +76,6 @@ public class Tienda {
 
 
 	public void comprarProducto(Producto producto) {
-		System.out.println("entramos");
         List<Producto> lista = productosEnStock.get(getTipoProducto(producto));
         int totalProductos = calculaTotalElementos(productosEnStock);
         float costoTotal = producto.getCostoPorUnidad() * producto.getStock();
@@ -92,7 +90,6 @@ public class Tienda {
 	                }
 	            }
         	}else {
-        		System.out.println("vamos a agregar");
         		lista.add(producto);
         	}
             saldoCaja -= costoTotal;
@@ -108,7 +105,8 @@ public class Tienda {
 			if(productosAVender.keySet().size()>0) {
 				productosAVender = validarDisponibilidadDeProductos(productosAVender);
 				//validarDescuento
-				for(String clave : productosAVender.keySet()) {
+				List<String> claves = productosAVender.keySet().stream().filter(clave -> true).collect(Collectors.toList());
+				for(String clave : claves) {
 					float monto = obtenerMontoPorProducto(clave, productosAVender.get(clave));
 					if(monto!= 0f) {
 						montosPorProductoFinales.put(clave, monto);
@@ -126,10 +124,7 @@ public class Tienda {
 			System.out.println("No se puede realizar la transacción, error: cantidad de productos no permitidos");
 		}
     }
-	/*Se desea conocer la lista de 
-	 * productos comestibles NO importados cuyo descuento sea menor a un determinado porcentaje. 
-	 * Para ello se pide implementar un método llamado obtenerComestiblesConMenorDescuento(porcentaje_descuento) 
-	 * que devolverá una lista de productos comestibles (descripción) NO importados cuyo descuento sea menor al porcentaje pasado como parámetro.*/
+	
 	public void obtenerComestiblesConMenorDescuento(float porcentajeDescuento) {
 		List <Producto>comestiblesMenorAporcentajeDesc = new ArrayList<Producto>();
 		String tipo;
@@ -154,17 +149,13 @@ public class Tienda {
 		imprimirListaOrdenada(comestiblesMenorAporcentajeDesc);
 	}
 	
-/*También se desea conocer los productos que de cualquier tipo que estén generando ganancias inferiores a un porcentaje determinado y la cantidad de ellos en stock. 
-	 * Para ello deberá implementar un método llamado listarProductosConUtilidadesInferiores(porcentaje_utilidad). 
-	 * El resultado de esta será una lista que indique el código, la descripción y la cantidad en stock de cada producto resultante, e imprimirlo.
-*/
 	public void listarProductosConUtilidadesInferiores(float porcentajeUtilidad){
 		List<Producto> productosConUtilidadesInferiores = new ArrayList<>();
 		this.productosEnStock.entrySet().stream().forEach(entry -> 
 			productosConUtilidadesInferiores.addAll(entry.getValue().stream().filter(producto 
 					->producto.getPorcentajeGanancia()<porcentajeUtilidad).collect(Collectors.toList())));
 		productosConUtilidadesInferiores.stream().forEach(producto -> 
-					System.out.println(producto.getIdentificacion()+ " " + producto.getDescripcion() +"" + producto.getStock()));
+					System.out.println(producto.getIdentificacion()+ " " + producto.getDescripcion() +" " + producto.getStock()));
 		
 	}
 	
@@ -322,10 +313,6 @@ public class Tienda {
         return null;
     }
 	
-	private ProductoLimpieza getProductoLimpieza(Producto producto) {
-		return (ProductoLimpieza) producto;
-        
-    }
 	private ProductoEnvasado getProductoEnvasado(Producto producto) {
 		return (ProductoEnvasado) producto;
         
